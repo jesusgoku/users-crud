@@ -1,0 +1,20 @@
+form.form(method='post', action=form_action)
+    div.form-group
+        label First name
+        input.form-control(type='text', name='firstName', value=(user ? user.firstName : ''))
+    div.form-group
+        label Last name
+        input.form-control(type='text', name='lastName', value=(user ? user.lastName : ''))
+    div.form-group
+        label E-mail
+        input.form-control(type='email', name='email', value=(user ? user.email : ''))
+    div.form-group
+        label Birth day
+        input.form-control(type='text', name='birthDay', value=(user ? user.birthDay : ''), data-provide='datepicker', data-date-format='yyyy-mm-dd', data-date-autoclose='true')
+    div.form-group
+        label Password
+        input.form-control(type='password', name='password')
+    button.btn.btn-primary(type='submit').
+        #[i.fa.fa-floppy-o] Save
+    a.btn.btn-default(href='/users').
+        #[i.fa.fa-arrow-left] Back

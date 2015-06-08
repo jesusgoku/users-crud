@@ -1,0 +1,11 @@
+extends ../layout
+
+block append stylesheets
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker.css')
+block append javascripts
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/js/bootstrap-datepicker.min.js')
+
+block content
+    h1 Users Create
+    - var form_action = '/users'
+    include ./form

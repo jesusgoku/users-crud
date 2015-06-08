@@ -1,0 +1,29 @@
+extends ../layout
+block content
+    h1 Users
+    div.btn-toolbar(role='toolbar')
+        div.btn-group.btn-group-sm
+            a.btn.btn-primary(href='/users/create').
+                #[i.fa.fa-plus] Create
+    table.table.table.striped.table-bordered
+        thead
+            tr
+                th Full name
+                th Email
+                th Birth day
+                th Options
+        tbody
+            tr
+                each item in users
+                    tr
+                        td= item.fullName
+                        td= item.email
+                        td= item.birthDay
+                        td
+                            div.btn-group(role='group')
+                                a.btn.btn-xs.btn-primary(href='/users/' + item.id)
+                                    i.fa.fa-eye
+                                a.btn.btn-xs.btn-default(href='/users/' + item.id + '/edit')
+                                    i.fa.fa-pencil
+                                a.btn.btn-xs.btn-warning(href='/users/' + item.id + '/delete')
+                                    i.fa.fa-trash

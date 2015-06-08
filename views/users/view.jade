@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+    h1 User
+    div.btn-toolbar(role='toolbar')
+        div.btn-group.btn-group-sm(role='group')
+            a.btn.btn-primary(href='/users').
+                #[i.fa.fa-arrow-left] Back
+            a.btn.btn-default(href='/users/' + user.id + '/edit').
+                #[i.fa.fa-pencil] Edit
+            a.btn.btn-warning(href='/users/' + user.id + '/delete').
+                #[i.fa.fa-trash] Delete
+    dl
+        dt First name
+        dd= user.firstName
+        dt Last name
+        dd= user.lastName
+        dt E-mail
+        dd= user.email
+        dt Birth date
+        dd= user.birthDay
