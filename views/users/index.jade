@@ -25,5 +25,10 @@ block content
                                     i.fa.fa-eye
                                 a.btn.btn-xs.btn-default(href='/users/' + item.id + '/edit')
                                     i.fa.fa-pencil
-                                a.btn.btn-xs.btn-warning(href='/users/' + item.id + '/delete')
+                                a.btn.btn-xs.btn-warning(
+                                  href='/users/' + item.id + '/delete'
+                                  data-url='/users/' + item.id
+                                  data-method='delete'
+                                  data-confirm='Are you sure?'
+                                )
                                     i.fa.fa-trash

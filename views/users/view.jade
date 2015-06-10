@@ -1,21 +1,126 @@
 extends ../layout
 
+block append stylesheets
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.css')
+
+block append javascripts
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.js')
+  script(src = 'https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js')
+  script(src='/javascripts/dropzone.js')
+
 block content
-    h1 User
-    div.btn-toolbar(role='toolbar')
-        div.btn-group.btn-group-sm(role='group')
-            a.btn.btn-primary(href='/users').
-                #[i.fa.fa-arrow-left] Back
-            a.btn.btn-default(href='/users/' + user.id + '/edit').
-                #[i.fa.fa-pencil] Edit
-            a.btn.btn-warning(href='/users/' + user.id + '/delete').
-                #[i.fa.fa-trash] Delete
-    dl
-        dt First name
-        dd= user.firstName
-        dt Last name
-        dd= user.lastName
-        dt E-mail
-        dd= user.email
-        dt Birth date
-        dd= user.birthDay
+  h1 User
+  div.btn-toolbar(role='toolbar')
+    div.btn-group.btn-group-sm(role='group')
+      a.btn.btn-primary(href='/users').
+        #[i.fa.fa-arrow-left] Back
+      a.btn.btn-default(href='/users/' + user.id + '/edit').
+        #[i.fa.fa-pencil] Edit
+      a.btn.btn-warning(
+        href='/users/' + user.id + '/delete'
+        data-url='/users/' + user.id
+        data-method='delete'
+        data-confirm='Are you sure?'
+      ).
+        #[i.fa.fa-trash] Delete
+  div.row
+    div.col-xs-9
+      .panel.panel-default
+        .panel-heading User Info
+        .panel-body
+          #current-profile-photo.pull-left(
+            style={'margin-right': '20px'},
+          )
+            if user.CurrentProfilePhoto
+              img.img-rounded(
+                src=user.CurrentProfilePhoto.webPath,
+                width='200',
+                height='200',
+                data-user-id=user.id,
+                data-id=user.CurrentProfilePhoto.id
+              )
+          dl
+            dt First name
+            dd= user.firstName
+            dt Last name
+            dd= user.lastName
+            dt E-mail
+            dd= user.email
+            dt Birth date
+            dd= user.birthDay
+      .panel.panel-default
+        .panel-heading.
+          Profile photos #[button.btn.btn-xs.btn-primary.pull-right(type='button', data-toggle='modal', data-target='#profile-photos-modal') #[i.fa.fa-upload] Upload photo]
+        .panel-body#profile-photos(data-user-id=user.id)
+          //if user.UserProfilePhotos
+          //  each item in user.UserProfilePhotos
+          //    img(src=item.webPath, width='200', height='200')
+    div.col-xs-3
+      .panel.panel-default
+        .panel-heading.
+          Social Networks #[button.btn.btn-xs.btn-primary.pull-right(type='button', data-toggle='modal', data-target='#social-network-modal') #[i.fa.fa-plus] Add]
+        .panel-body#social-networks
+          if user.UserSocialNetworks
+            each item in user.UserSocialNetworks
+              p #{item.socialUsername} (#{item.SocialNetwork.name})
+
+  .modal.fade#profile-photos-modal
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') &times;
+          h4.modal-title Upload profile photo
+        .modal-body
+          #profile-photos-dz.well(
+            data-action='/users/' + user.id + '/profile-photos',
+            style={
+              'min-height': '400px',
+              overflow: 'hidden',
+              'background-color': '#CCC',
+              color: '#333'
+            }
+          )
+            .dz-message
+              p.lead.text-center Drop files to upload (or click)
+
+  .modal.fade#social-network-modal
+    .modal-dialog.modal-sm
+      .modal-content
+        .modal-header
+          button.close(type='button', data-dismiss='modal', aria-label='Close')
+            span(aria-hidden='true') &times;
+          h4.modal-title Add social network
+        .modal-body
+          form(action='/users/' + user.id + '/social-networks', method='post', role='form')
+            .form-group
+              label Social network
+              select.form-control(name="SocialNetworkId")
+                if socialNetworks
+                  each item in socialNetworks
+                    option(value=item.id)= item.name
+            .form-group
+              label Username
+              input.form-control(type='text', name='socialUsername')
+            .form-group
+              label Id
+              input.form-control(type='text', name='socialId')
+        .modal-footer
+          button.btn.btn-default(type='button', data-dismiss='modal') Close
+          button.btn.btn-primary(type='button') Add
+
+  script#profile-photo-tmpl(type='text/x-handlebars-template')
+    .profile-photo(data-user-id=user.id, data-id='{{ id }}')
+      img(src='{{ webPath }}', data-id='{{ id }}' width='200', height='200')
+      .options.hide
+        .btn-group.btn-group-xs
+          button.btn.btn-xs.btn-success.btn-set-current(title='Set profile photo', data-toggle='tooltip', data-placement='top')
+            i.fa.fa-check
+          button.btn.btn-xs.btn-warning.btn-delete(title='Delete profile photo', data-toggle='tooltip', data-placement='top')
+            i.fa.fa-trash
+
+  script#social-network-tmpl(type='text/x-handlebars-template')
+    p {{ socialUsername }} ({{ socialNetwork }})
+
+  script#current-profile-photo-tmpl(type='text/x-handlebars-template')
+    img.img-rounded(src='{{ webPath }}', data-id='{{ id }}' width='200', height='200')

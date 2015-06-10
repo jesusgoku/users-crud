@@ -6,5 +6,11 @@ insert_final_newline = true
 charset = utf-8
 indent_style = space
 
+[www]
+indent_size = 2
+
 [*.js]
+indent_size = 2
+
+[*.jade]
 indent_size = 2

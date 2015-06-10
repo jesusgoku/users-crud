@@ -14,7 +14,8 @@ form.form(method='post', action=form_action)
     div.form-group
         label Password
         input.form-control(type='password', name='password')
-    button.btn.btn-primary(type='submit').
-        #[i.fa.fa-floppy-o] Save
-    a.btn.btn-default(href='/users').
-        #[i.fa.fa-arrow-left] Back
+    div.btn-group.btn-group-sm
+        button.btn.btn-primary(type='submit').
+            #[i.fa.fa-floppy-o] Save
+        a.btn.btn-default(href='/users').
+            #[i.fa.fa-arrow-left] Back

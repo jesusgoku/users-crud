@@ -43,7 +43,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        User.hasMany(models.UserProfilePhoto);
+        User.hasOne(models.UserProfilePhoto, { as: 'CurrentProfilePhoto', foreignKey: 'current_user_id' });
+        User.hasMany(models.UserSocialNetwork);
       }
     },
     getterMethods: {
