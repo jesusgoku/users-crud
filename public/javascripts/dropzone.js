@@ -30,7 +30,7 @@
         if ($img.length > 0) {
           $img
             .attr({
-              'src': data.webPat,
+              'src': data.webPath,
               'data-id': data.id
             });
         } else {
