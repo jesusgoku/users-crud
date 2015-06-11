@@ -17,18 +17,15 @@ router.post('/:user_id/profile-photos', [
   multer(),
   function (req, res) {
     var shared = { user: null };
-    var savePath = path.join(
-      __dirname,
-      '../public/user-profile-photos/',
-      path.basename(req.files.file.name)
-    );
+    var profilePhoto = models.UserProfilePhoto.build({
+      file: path.basename(req.files.file.name)
+    });
+    var savePath = profilePhoto.getAbsolutePath();
     models.User.findById(req.params.user_id)
       .then(function (user) {
         if (!user) { res.sendStatus(404); }
         shared.user = user;
-        return models.UserProfilePhoto.create({
-          file: path.basename(savePath)
-        });
+        return profilePhoto.save();
       }, createSendError(res))
       .then(function (profilePhoto) {
         return shared.user.addUserProfilePhoto(profilePhoto);
@@ -50,7 +47,7 @@ router.delete('/:user_id/profile-photos/:photo_id', function (req, res) {
       return profilePhoto.destroy();
     }, createSendError(res))
     .then(function (profilePhoto) {
-      fs.unlink(profilePhoto.absolutePath, function (error) {
+      fs.unlink(profilePhoto.getAbsolutePath(), function (error) {
         if (error) { console.log(error); }
       });
       res.sendStatus(204);

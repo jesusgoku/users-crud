@@ -12,26 +12,26 @@ module.exports = function(sequelize, DataTypes) {
     file: DataTypes.STRING
   }, {
     classMethods: {
-      associate: function(models) {
-        // UserProfilePhoto.hasOne(models.User);
-      }
+      associate: function(models) {}
     },
-    getterMethods: {
-      absolutePath: function () {
+    instanceMethods: {
+      getAbsolutePath: function () {
         return path.join(
           __dirname,
-          '/../public/',
+          '/../uploads/',
           this.webPath
         );
       },
+      getBasePath: function () {
+        return '/user-profile-photos';
+      }
+    },
+    getterMethods: {
       webPath: function () {
         return path.join(
-          this.basePath,
+          this.getBasePath(),
           this.getDataValue('file')
         );
-      },
-      basePath: function () {
-        return '/user-profile-photos';
       }
     }
   });
