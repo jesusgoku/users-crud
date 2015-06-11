@@ -7,4 +7,12 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/angular', function (req, res) {
+  res.render('angular');
+});
+
+router.get('/angular/users/:name', function (req, res) {
+  res.render('angular/users/' + req.params.name);
+});
+
 module.exports = router;

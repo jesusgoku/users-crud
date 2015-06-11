@@ -1,0 +1,12 @@
+extends layout
+
+block append javascripts
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.16/angular.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.16/angular-route.min.js')
+
+block javascripts_user
+  script(src='/javascripts/angular-app.js')
+
+block content
+  .col-xs-12(ng-app='appModule', ng-controller='AppController')
+    .col-xs-12(ng-view)

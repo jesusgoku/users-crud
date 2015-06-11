@@ -1,0 +1,6 @@
+tr
+  td {{ user.fullName }}
+  td {{ user.email }}
+  td {{ user.birthDay | date }}
+  td
+    user-list-options(user-id='{{ user.id }}')
