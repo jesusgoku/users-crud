@@ -5,7 +5,7 @@ block content
         div.btn-group.btn-group-sm
             a.btn.btn-primary(href='/users/create').
                 #[i.fa.fa-plus] Create
-    table.table.table.striped.table-bordered
+    table.table.table-striped.table-bordered
         thead
             tr
                 th Full name
@@ -21,11 +21,11 @@ block content
                         td= item.birthDay
                         td
                             div.btn-group(role='group')
-                                a.btn.btn-xs.btn-primary(href='/users/' + item.id)
+                                a.btn.btn-xs.btn-info(href='/users/' + item.id)
                                     i.fa.fa-eye
                                 a.btn.btn-xs.btn-default(href='/users/' + item.id + '/edit')
                                     i.fa.fa-pencil
-                                a.btn.btn-xs.btn-warning(
+                                a.btn.btn-xs.btn-danger(
                                   href='/users/' + item.id + '/delete'
                                   data-url='/users/' + item.id
                                   data-method='delete'
@@ -40,11 +40,11 @@ block content
         td {{ birthDay }}
         td
           div.btn-group(role='group')
-            a.btn.btn-xs.btn-primary(href='/users/{{ id }}')
+            a.btn.btn-xs.btn-info(href='/users/{{ id }}')
               i.fa.fa-eye
             a.btn.btn-xs.btn-default(href='/users/{{ id }}/edit')
               i.fa.fa-pencil
-            a.btn.btn-xs.btn-warning(
+            a.btn.btn-xs.btn-danger(
             href='/users/{{ id }}/delete'
             data-url='/users/{{ id }}'
             data-method='delete'
