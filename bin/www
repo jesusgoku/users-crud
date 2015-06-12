@@ -25,6 +25,12 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
+ * Socket.io
+ */
+var io = require('socket.io')(server);
+require('../sockets')(io);
+
+/**
  * Sequelize
  */
 

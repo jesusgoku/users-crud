@@ -1,5 +1,6 @@
 'use strict';
 var bcrypt = require('bcrypt');
+var ee = require('../events');
 
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('User', {
@@ -58,7 +59,21 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         fields: ['email']
       }
-    ]
+    ],
+    hooks: {
+      afterCreate: function (user, options, fn) {
+        ee.emit('userCreate', user);
+        fn(null, user);
+      },
+      afterUpdate: function (user, options, fn) {
+        ee.emit('userUpdate', user);
+        fn(null, user);
+      },
+      afterDestroy: function (user, options, fn) {
+        ee.emit('userDestroy', user);
+        fn(null, user);
+      }
+    }
   });
   return User;
 };

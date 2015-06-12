@@ -13,7 +13,10 @@ html(lang='en')
         .col-xs-12
           block content
     block javascripts
+      script(src='/socket.io/socket.io.js')
       script(src='https://code.jquery.com/jquery-1.11.3.min.js')
       script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js')
+      script(src = 'https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js')
     block javascripts_user
       script(src='/javascripts/scripts.js')
+      script(src='/javascripts/sockets.js')

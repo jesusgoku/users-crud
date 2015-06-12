@@ -12,10 +12,10 @@ block content
                 th Email
                 th Birth day
                 th Options
-        tbody
+        tbody#user-list
             tr
                 each item in users
-                    tr
+                    tr(data-user-id=item.id)
                         td= item.fullName
                         td= item.email
                         td= item.birthDay
@@ -33,3 +33,21 @@ block content
                                 )
                                     i.fa.fa-trash
 
+    script#list-item-tmpl(type='text/x-handlebars-template')
+      tr(data-user-id='{{ id }}')
+        td {{ fullName }}
+        td {{ email }}
+        td {{ birthDay }}
+        td
+          div.btn-group(role='group')
+            a.btn.btn-xs.btn-primary(href='/users/{{ id }}')
+              i.fa.fa-eye
+            a.btn.btn-xs.btn-default(href='/users/{{ id }}/edit')
+              i.fa.fa-pencil
+            a.btn.btn-xs.btn-warning(
+            href='/users/{{ id }}/delete'
+            data-url='/users/{{ id }}'
+            data-method='delete'
+            data-confirm='Are you sure?'
+            )
+              i.fa.fa-trash

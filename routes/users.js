@@ -27,7 +27,7 @@ router.post('/', function (req, res) {
     .then(function (user) {
       res.format({
         json: function () {
-          res.location('/users/' + user.get('id'));
+          res.sendStatus(204);
         },
         html: function () {
           res.redirect('/users');
