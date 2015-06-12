@@ -12,11 +12,12 @@ router.get('/', function(req, res) {
         json: function() {
           res.json(users);
         },
+
         html: function () {
           res.render('users/index', { users: users });
         }
       });
-    });
+    }, createSendError(res));
 });
 
 /**
@@ -41,7 +42,10 @@ router.post('/', function (req, res) {
           });
         },
         html: function () {
-          res.render('users/create', { user: req.body, errors: error.errors });
+          res.render('users/create', {
+            user: req.body,
+            errors: error.errors
+          });
         }
       });
     });
@@ -58,22 +62,27 @@ router.get('/create', function (req, res) {
  * View user details
  */
 router.get('/:user_id', function (req, res) {
+  var shared = { user: null };
   models.User.findOne({
       where: { id: req.params.user_id },
       include: { all: true, nested: true }
     })
     .then(function (user) {
-      res.format({
-        json: function () {
-          res.json(user);
-        },
-        html: function () {
-            models.SocialNetwork.findAll().then(function (socialNetworks) {
-                res.render('users/view', { user: user, socialNetworks: socialNetworks });
-            });
-        }
+      shared.user = user;
+      console.log(req.accepts('json'));
+      if (req.accepts('html') === 'html') {
+        return models.SocialNetwork.findAll();
+      } else {
+        res.json(user);
+      }
+    }, createSendError(res))
+    .then(function (socialNetworks) {
+      res.render('users/view', {
+        user: shared.user,
+        socialNetworks: socialNetworks
       });
-    });
+    }, createSendError(res))
+  ;
 });
 
 /**
@@ -88,15 +97,13 @@ router.put('/:user_id', function (req, res) {
             user.setCurrentProfilePhoto(profilePhoto);
           });
       }
-      user.updateAttributes(req.body)
-        .then(function (user) {
-          res.json(user);
-        }, function (error) {
-          res.status(400).json({ errors: error.errors });
-        });
-    }, function (error) {
-      res.sendStatus(404);
-    });
+
+      return user.updateAttributes(req.body);
+    }, createSendError(res))
+    .then(function (user) {
+      res.json(user);
+    }, createSendError(res))
+  ;
 });
 
 /**
@@ -106,7 +113,7 @@ router.get('/:user_id/edit', function (req, res) {
   models.User.findById(req.params.user_id)
     .then(function (user) {
       res.render('users/edit', { user: user });
-    });
+    }, createSendError(res));
 });
 
 /**
@@ -115,11 +122,12 @@ router.get('/:user_id/edit', function (req, res) {
 router.post('/:user_id/edit', function (req, res) {
   models.User.findById(req.params.user_id)
     .then(function (user) {
-      user.updateAttributes(req.body)
-        .then(function () {
-          res.redirect('/users/' + user.id);
-        });
-    });
+      return user.updateAttributes(req.body);
+    }, createSendError(res))
+    .then(function (user) {
+      res.redirect('/users/' + user.id);
+    }, createSendError(res))
+  ;
 });
 
 /**
@@ -128,10 +136,12 @@ router.post('/:user_id/edit', function (req, res) {
 router.get('/:user_id/delete', function (req, res) {
   models.User.findById(req.params.user_id)
     .then(function (user) {
-      user.destroy().then(function () {
-        res.redirect('/users');
-      });
-    });
+      return user.destroy();
+    }, createSendError(res))
+    .then(function() {
+      res.redirect('/users');
+    }, createSendError(res))
+  ;
 });
 
 /**
@@ -140,10 +150,19 @@ router.get('/:user_id/delete', function (req, res) {
 router.delete('/:user_id', function(req, res) {
   models.User.findById(req.params.user_id)
     .then(function (user) {
-      user.destroy().then(function () {
-        res.sendStatus(204);
-      });
-    });
+      return user.destroy();
+    }, createSendError(res))
+    .then(function () {
+      res.sendStatus(204);
+    }, createSendError(res))
+  ;
 });
+
+//- Util
+function createSendError(res) {
+  return function (error) {
+    res.status(400).json({ errors: error.errors });
+  };
+}
 
 module.exports = router;
