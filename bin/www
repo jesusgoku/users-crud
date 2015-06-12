@@ -50,27 +50,33 @@ models.sequelize.sync({ force: true }).then(function () {
     { name: 'GooglePlus' }
   ];
 
-  socialNetworks.forEach(function (socialNetwork) {
-    models.SocialNetwork.create(socialNetwork);
+  models.sequelize.transaction(function (t) {
+    return models.SocialNetwork.bulkCreate(socialNetworks, { transaction: t });
   });
 
-  models.User.create({
+  var shared = { user: null, socialNetwork: null };
+  models.sequelize.transaction(function (t) {
+    return models.User.create({
       firstName: 'Cesar',
       lastName: 'Sepulveda',
       email: 'csepulveda@mediastre.am',
       birthDay: '1980-01-01',
       password: 'mediastream'
-  }).then(function(user) {
-    models.SocialNetwork.findById(1).then(function (socialNetwork) {
-      models.UserSocialNetwork.create({
+    }, { transaction: t }).then(function(user) {
+      shared.user = user;
+      return models.SocialNetwork.findById(1);
+    }).then(function (socialNetwork) {
+      shared.socialNetwork = socialNetwork;
+      return models.UserSocialNetwork.create({
         socialUsername: 'csepulvedab',
         socialId: '12346578931'
-      }).then(function (userSocialNetwork) {
-        userSocialNetwork.setSocialNetwork(socialNetwork);
-        user.addUserSocialNetwork(userSocialNetwork);
       });
+    }).then(function (userSocialNetwork) {
+      userSocialNetwork.setSocialNetwork(shared.socialNetwork);
+      shared.user.addUserSocialNetwork(userSocialNetwork);
     });
   });
+
 
 
 
